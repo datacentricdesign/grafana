@@ -1,0 +1,42 @@
+{
+  "type": "datasource",
+  "name": "Bucket DataSource",
+  "id": "datacentricdesign-bucket-datasource",
+  "metrics": true,
+  "info": {
+    "description": "",
+    "author": {
+      "name": "Jacky Bourgeois",
+      "url": "https://datacentricdesign.org/about"
+    },
+    "keywords": [],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://datacentricdesign.org/tools/bucket"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/datacentricdeisng/grafana-datasource/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaVersion": "6.5.x",
+    "plugins": []
+  },
+  "routes": [
+    {
+      "path": "bucket",
+      "url": "http://bucket-api:8080"
+    }
+  ]
+  
+}

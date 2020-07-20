@@ -1,0 +1,16 @@
+{
+  "name": "@datacentricdesign/grafana",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@grafana/runtime": "^7.0.3",
+    "@grafana/toolkit": "^6.7.3",
+    "eslint": "^7.2.0"
+  }
+}
