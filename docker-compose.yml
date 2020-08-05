@@ -1,10 +1,10 @@
 version: '3'
 
-# FOR DEVELOPMENT/LOCAL USE ONLY
-# This compose will load Grafana locally
 services:
   grafana:
-    image: grafana/grafana:7.0.0-beta3
+    image: grafana/grafana:7.1.1
+    # build:
+    #   context: ./grafana-datasource
     container_name: grafana
     environment:
       - GF_SERVER_PROTOCOL=http
@@ -13,10 +13,10 @@ services:
       - GF_SERVER_DOMAIN=localhost
       - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:3000/
 
-      - GF_AUTH_GENERIC_OAUTH_ENABLED=false
+      - GF_AUTH_GENERIC_OAUTH_ENABLED=true
       - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=clients:grafana
-      - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=test-grafana-secret
-      - GF_AUTH_GENERIC_OAUTH_SCOPES=openid offline email profile dcd:public dcd:things dcd:persons
+      - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=$GRAFANA_CLIENT_SECRET
+      - GF_AUTH_GENERIC_OAUTH_SCOPES=$GRAFANA_SCOPE
       - GF_AUTH_GENERIC_OAUTH_AUTH_URL=https://dwd.tudelft.nl:443/oauth2/auth
       - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=https://dwd.tudelft.nl:443/oauth2/token
       - GF_AUTH_GENERIC_OAUTH_API_URL=https://dwd.tudelft.nl:443/userinfo
@@ -24,7 +24,13 @@ services:
       - GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP=true
       - GF_AUTH_GENERIC_OAUTH_SEND_CLIENT_CREDENTIALS_VIA_POST=true
 
-    volumes:
-      - ~/Prog/grafana-plugins:/var/lib/grafana/plugins
     ports:
       - 3000:3000
+    volumes:
+      # - .:/var/lib/grafana/plugins
+      - ./grafana-datasource:/var/lib/grafana/plugins/dcd
+
+# networks: 
+#   default:
+#       external:
+#         name: dcd-net

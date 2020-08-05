@@ -11,10 +11,11 @@
   "author": "Jacky Bourgeois",
   "license": "MIT",
   "devDependencies": {
-    "@grafana/data": "next",
-    "@grafana/toolkit": "next",
-    "@grafana/ui": "next",
-    "@types/lodash": "latest"
+    "@grafana/runtime": "7.1.1",
+    "@grafana/data": "7.1.1",
+    "@grafana/toolkit": "7.1.1",
+    "@grafana/ui": "7.1.1",
+    "@types/lodash": "4.14.158"
   },
   "engines": {
     "node": ">=12 <13"

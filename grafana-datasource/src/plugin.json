@@ -1,6 +1,6 @@
 {
   "type": "datasource",
-  "name": "Bucket DataSource",
+  "name": "Bucket DataSource Plugin",
   "id": "datacentricdesign-bucket-datasource",
   "metrics": true,
   "info": {
@@ -34,8 +34,8 @@
   },
   "routes": [
     {
-      "path": "bucket",
-      "url": "http://bucket-api:8080"
+      "path": "data",
+      "url": "https://dwd.tudelft.nl"
     }
   ]
   
