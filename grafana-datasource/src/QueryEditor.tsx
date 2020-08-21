@@ -2,19 +2,18 @@ import React, { PureComponent } from 'react';
 import { Select } from '@grafana/ui';
 import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './DataSource';
-import { MyDataSourceOptions, MyQuery, defaultQuery } from './types';
+import { MyDataSourceOptions, MyQuery } from './types';
 
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
 export class QueryEditor extends PureComponent<Props> {
-
   private thingOptions: SelectableValue[] = [];
   private propertyOptions: SelectableValue[] = [];
-  private selectedThingOption: SelectableValue;
-  private selectedPropertyOption: SelectableValue;
+  private selectedThingOption: SelectableValue | undefined;
+  private selectedPropertyOption: SelectableValue | undefined;
 
   constructor(props: Props) {
-    super(props)
+    super(props);
   }
 
   onThingChange = (event: SelectableValue<HTMLInputElement>) => {
@@ -31,15 +30,15 @@ export class QueryEditor extends PureComponent<Props> {
               id: '',
               name: '',
               description: '',
-              dimensions: []
+              dimensions: [],
             },
             values: [[]],
-          }
+          };
           this.updateProperties();
         }
       });
     }
-    
+
     onRunQuery();
   };
 
@@ -60,7 +59,7 @@ export class QueryEditor extends PureComponent<Props> {
       this.props.datasource.things.map(t => {
         this.thingOptions.push({ value: t.id, label: t.name, description: t.description });
         if (query.thing !== undefined && query.thing.id === t.id) {
-          this.selectedThingOption = { value: t.id, label: t.name, description: t.description }
+          this.selectedThingOption = { value: t.id, label: t.name, description: t.description };
         }
       });
     }
@@ -73,7 +72,7 @@ export class QueryEditor extends PureComponent<Props> {
       query.thing.properties.map(p => {
         this.propertyOptions.push({ value: p.id, label: p.name, description: p.description });
         if (query.property !== undefined && query.property.id === p.id) {
-          this.selectedPropertyOption = { value: p.id, label: p.name, description: p.description }
+          this.selectedPropertyOption = { value: p.id, label: p.name, description: p.description };
         }
       });
     }
@@ -84,8 +83,18 @@ export class QueryEditor extends PureComponent<Props> {
     this.updateProperties();
     return (
       <div className="gf-form">
-        <Select prefix="Thing" value={this.selectedThingOption} options={this.thingOptions} onChange={this.onThingChange} />
-        <Select prefix="Property" value={this.selectedPropertyOption} options={this.propertyOptions} onChange={this.onPropertyChange} />
+        <Select
+          prefix="Thing"
+          value={this.selectedThingOption}
+          options={this.thingOptions}
+          onChange={this.onThingChange}
+        />
+        <Select
+          prefix="Property"
+          value={this.selectedPropertyOption}
+          options={this.propertyOptions}
+          onChange={this.onPropertyChange}
+        />
       </div>
     );
   }

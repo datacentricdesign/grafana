@@ -19,7 +19,7 @@ export interface PropertyType {
   id: string;
   name: string;
   description: string;
-  dimensions: Dimension[]
+  dimensions: Dimension[];
 }
 
 export interface Dimension {
@@ -28,36 +28,34 @@ export interface Dimension {
   description: string;
 }
 
-export interface Field {
-  
-}
+export interface Field {}
 
 export interface MyQuery extends DataQuery {
   things: Thing[];
   thing: Thing;
-  property: Property
+  property: Property;
 }
 
 export const defaultQuery: Partial<MyQuery> = {
   things: [],
   thing: {
-      id: '',
-      name: '',
-      description: '',
-      properties: [],
-    },
+    id: '',
+    name: '',
+    description: '',
+    properties: [],
+  },
   property: {
+    id: '',
+    name: '',
+    description: '',
+    type: {
       id: '',
       name: '',
       description: '',
-      type: {
-        id: '',
-        name: '',
-        description: '',
-        dimensions: []
-      },
-      values: [[]],
-    }
+      dimensions: [],
+    },
+    values: [[]],
+  },
 };
 
 /**
