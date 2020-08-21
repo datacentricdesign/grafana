@@ -9,7 +9,7 @@ RUN yarn install && mkdir /dcd-datasource && mv ./node_modules ./dcd-datasource
 
 WORKDIR /dcd-datasource
 
-COPY . .
+COPY ./grafana-datasource .
 
 # Build the project and copy the files
 RUN yarn run build

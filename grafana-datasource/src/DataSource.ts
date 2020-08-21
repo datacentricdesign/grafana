@@ -16,29 +16,11 @@ import { MyQuery, MyDataSourceOptions } from './types';
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   url?: string;
   things: Thing[];
-  thing: Thing;
-  property: Property;
 
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
     this.url = instanceSettings.url;
-    this.things = [];
-    this.thing = {
-      id: '',
-      name: '',
-      properties: [],
-    };
-    this.property = {
-      id: '',
-      name: '',
-      type: {
-        id: '',
-        name: '',
-        description: '',
-        dimensions: []
-      },
-      values: [[]],
-    };
+    this.things = []
   }
 
   async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
@@ -58,49 +40,56 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
         .then((result: any) => {
           this.things = result.data;
         })
-        .catch(error => {
+        .catch((error: Error) => {
           console.log('error fetching things:');
           console.error(error);
         });
     }
 
-    if (this.thing.id !== '' && this.property.id !== '') {
-      await getBackendSrv()
-        .datasourceRequest({
-          url: this.url + routePath + '/things/' + this.thing.id + '/properties/'
-          + this.property.id + '?from=' + from + '&to=' + to,
-          method: 'GET',
-        })
-        .then((result: any) => {
-          console.log("result from backend");
-          console.log(result);
-          this.property = result.data;
-        })
-        .catch((error: Error) => {
-          console.log('error fetching property:');
-          console.error(error);
-        });
-    }
+    // if (this.thing.id !== '' && this.property.id !== '') {
+    //   await getBackendSrv()
+    //     .datasourceRequest({
+    //       url: this.url + routePath + '/things/' + this.thing.id + '/properties/'
+    //       + this.property.id + '?from=' + from + '&to=' + to,
+    //       method: 'GET',
+    //     })
+    //     .then((result: any) => {
+    //       console.log("result from backend");
+    //       console.log(result);
+    //       this.property = result.data;
+    //     })
+    //     .catch((error: Error) => {
+    //       console.log('error fetching property:');
+    //       console.error(error);
+    //     });
+    // }
 
-    // Return a constant for each query.
-    const data = options.targets.map(target => {
+    const data: MutableDataFrame[] = await Promise.all(options.targets.map(async (target) => {
       // TODO query to Bucket
-      target = defaults(target, {
-        things: this.things,
-        thing: this.thing,
-      });
-      // TODO format result
       let fields = []
-      if (this.property !== undefined) {
-        fields = valueToFields(this.property)
+
+      console.log(target)
+      if (target.thing !== undefined && target.property !== undefined) {
+        console.log("hello hello??")
+        const result = await getBackendSrv().datasourceRequest({
+          url: this.url + routePath + '/things/' + target.thing.id + '/properties/'
+            + target.property.id + '?from=' + from + '&to=' + to, method: 'GET'
+        })
+        fields = valueToFields(result.data)
+      } else {
+        fields = [{
+          name: 'Time',
+          values: [],
+          type: FieldType.time,
+        }]
       }
-      return new MutableDataFrame({
+      const frame = new MutableDataFrame({
         refId: target.refId,
         fields: fields,
-      });
-    });
-
-    console.log(data);
+      })
+      console.log(frame)
+      return frame;
+    }))
     return { data };
   }
 
@@ -112,8 +101,6 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
       url: this.url + routePath + '/things/health',
       method: 'GET',
     });
-
-    console.log(result.data);
 
     if (result.data.status === 'OK') {
       return {
@@ -130,13 +117,13 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
 }
 
 function valueToFields(property: Property) {
-  const fields:Array<any> = [{
-      name: 'Time',
-      values: [],
-      type: FieldType.time,
-    }]
+  const fields: Array<any> = [{
+    name: 'Time',
+    values: [],
+    type: FieldType.time,
+  }]
 
-  for (let i=0;i<property.type.dimensions.length;i++) {
+  for (let i = 0; i < property.type.dimensions.length; i++) {
     let dim = property.type.dimensions[i];
     fields.push({
       name: dim.name,
@@ -145,9 +132,9 @@ function valueToFields(property: Property) {
     })
   }
 
-  for (let i=0;i<property.values.length;i++) {
+  for (let i = 0; i < property.values.length; i++) {
     let val = property.values[i];
-    for (let j=0;j<val.length;j++) {
+    for (let j = 0; j < val.length; j++) {
       fields[j].values.push(val[j])
     }
   }

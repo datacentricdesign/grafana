@@ -2,22 +2,39 @@ import React, { PureComponent } from 'react';
 import { Select } from '@grafana/ui';
 import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './DataSource';
-import { MyDataSourceOptions, MyQuery } from './types';
+import { MyDataSourceOptions, MyQuery, defaultQuery } from './types';
 
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
 export class QueryEditor extends PureComponent<Props> {
+
   private thingOptions: SelectableValue[] = [];
   private propertyOptions: SelectableValue[] = [];
+  private selectedThingOption: SelectableValue;
+  private selectedPropertyOption: SelectableValue;
+
+  constructor(props: Props) {
+    super(props)
+  }
 
   onThingChange = (event: SelectableValue<HTMLInputElement>) => {
-    const { onRunQuery } = this.props;
-    console.log('thing change props');
-    console.log(this.props);
+    const { onChange, query, onRunQuery } = this.props;
     if (this.props.datasource !== undefined) {
       this.props.datasource.things.map(t => {
         if (t.id === event.value + '') {
-          this.props.datasource.thing = t;
+          onChange({ ...query, thing: t });
+          query.property = {
+            id: '',
+            name: '',
+            description: '',
+            type: {
+              id: '',
+              name: '',
+              description: '',
+              dimensions: []
+            },
+            values: [[]],
+          }
           this.updateProperties();
         }
       });
@@ -27,33 +44,37 @@ export class QueryEditor extends PureComponent<Props> {
   };
 
   onPropertyChange = (event: SelectableValue<HTMLInputElement>) => {
-    const { onRunQuery } = this.props;
-    console.log('property change props');
-    console.log(this.props);
-    this.props.datasource.thing.properties.map(p => {
+    const { onChange, query, onRunQuery } = this.props;
+    query.thing.properties.map(p => {
       if (p.id === event.value + '') {
-        this.props.datasource.property = p;
+        onChange({ ...query, property: p });
       }
     });
     onRunQuery();
   };
 
   updateThings() {
+    const { query } = this.props;
     this.thingOptions = [];
     if (this.props.datasource.things instanceof Array) {
-      console.log('updateThing');
-      console.log(this.props.datasource.things);
       this.props.datasource.things.map(t => {
-        this.thingOptions.push({ value: t.id, label: t.name });
+        this.thingOptions.push({ value: t.id, label: t.name, description: t.description });
+        if (query.thing !== undefined && query.thing.id === t.id) {
+          this.selectedThingOption = { value: t.id, label: t.name, description: t.description }
+        }
       });
     }
   }
 
   updateProperties() {
+    const { query } = this.props;
     this.propertyOptions = [];
-    if (this.props.datasource.thing.name !== '') {
-      this.props.datasource.thing.properties.map(t => {
-        this.propertyOptions.push({ value: t.id, label: t.name });
+    if (query.thing !== undefined) {
+      query.thing.properties.map(p => {
+        this.propertyOptions.push({ value: p.id, label: p.name, description: p.description });
+        if (query.property !== undefined && query.property.id === p.id) {
+          this.selectedPropertyOption = { value: p.id, label: p.name, description: p.description }
+        }
       });
     }
   }
@@ -63,8 +84,8 @@ export class QueryEditor extends PureComponent<Props> {
     this.updateProperties();
     return (
       <div className="gf-form">
-        <Select prefix="Thing" options={this.thingOptions} onChange={this.onThingChange} />
-        <Select prefix="Property" options={this.propertyOptions} onChange={this.onPropertyChange} />
+        <Select prefix="Thing" value={this.selectedThingOption} options={this.thingOptions} onChange={this.onThingChange} />
+        <Select prefix="Property" value={this.selectedPropertyOption} options={this.propertyOptions} onChange={this.onPropertyChange} />
       </div>
     );
   }
