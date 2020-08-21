@@ -9,11 +9,11 @@ services:
       - GRAFANA_CLIENT_ID=$GRAFANA_CLIENT_ID
       - GRAFANA_CLIENT_SECRET=$GRAFANA_CLIENT_SECRET
       - GRAFANA_SCOPE=$GRAFANA_SCOPE
+      - GRAFANA_ROOT_URL=$GRAFANA_ROOT_URL
 
     ports:
       - 3000:3000
     volumes:
- #     - ./grafana-datasource/dist:/var/lib/grafana/plugins/dcd-datasource
       - ./grafana.ini:/etc/grafana/grafana.ini
       - ./provisioning:/etc/grafana/provisioning
       - $HOST_DATA_FOLDER/grafana/data:/db
