@@ -13,10 +13,10 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./grafana-datasource/dist:/var/lib/grafana/plugins/dcd-datasource
+ #     - ./grafana-datasource/dist:/var/lib/grafana/plugins/dcd-datasource
       - ./grafana.ini:/etc/grafana/grafana.ini
       - ./provisioning:/etc/grafana/provisioning
-      - $HOST_DATA_FOLDER/grafana/data:/var/lib/grafana
+      - $HOST_DATA_FOLDER/grafana/data:/var/lib/grafana/db
       - $HOST_DATA_FOLDER/grafana/logs:/var/log/grafana
 
 networks: 
