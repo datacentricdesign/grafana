@@ -1,6 +1,6 @@
 {
   "name": "@datacentricdesign/grafana-datasource",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
@@ -11,8 +11,8 @@
   "author": "Jacky Bourgeois",
   "license": "MIT",
   "devDependencies": {
-    "@grafana/runtime": "7.1.1",
     "@grafana/data": "7.1.1",
+    "@grafana/runtime": "^7.1.1",
     "@grafana/toolkit": "7.1.1",
     "@grafana/ui": "7.1.1",
     "@types/lodash": "4.14.158"

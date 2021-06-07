@@ -2,22 +2,19 @@ version: '3'
 
 services:
   grafana:
-    # Use multi-stage build in prod to automatically build the plugins
-    build: .
+    # Use the original grafana image to speed up dev time
+    image: grafana/grafana:7.1.1
     container_name: grafana
     environment:
       - GRAFANA_CLIENT_ID=$GRAFANA_CLIENT_ID
       - GRAFANA_CLIENT_SECRET=$GRAFANA_CLIENT_SECRET
       - GRAFANA_SCOPE=$GRAFANA_SCOPE
-      - GRAFANA_PROTOCOL=$GRAFANA_PROTOCOL
-      - GRAFANA_DOMAIN=$GRAFANA_PROTOCOL
       - GRAFANA_ROOT_URL=$GRAFANA_ROOT_URL
-      - GRAFANA_ADMIN_USER=$GRAFANA_ADMIN_USER
-      - GRAFANA_ADMIN_PASSWORD=$GRAFANA_ADMIN_PASSWORD
-      
+
     ports:
       - 3000:3000
     volumes:
+      - ./grafana-datasource/dist:/var/lib/grafana/plugins/dcd-datasource
       - ./grafana.ini:/etc/grafana/grafana.ini
       - ./provisioning:/etc/grafana/provisioning
       - $HOST_DATA_FOLDER/grafana/data:/db

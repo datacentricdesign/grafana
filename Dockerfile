@@ -2,14 +2,14 @@
 FROM node:12.5-alpine as builder
 
 # copy the package.json to install dependencies
-COPY package.json yarn.lock ./
+COPY ./grafana-datasource/package.json ./grafana-datasource/yarn.lock ./
 
 # Install the dependencies and make the folder
 RUN yarn install && mkdir /dcd-datasource && mv ./node_modules ./dcd-datasource
 
 WORKDIR /dcd-datasource
 
-COPY . .
+COPY ./grafana-datasource .
 
 # Build the project and copy the files
 RUN yarn run build

@@ -11,8 +11,8 @@
     },
     "keywords": [],
     "logos": {
-      "small": "img/logo.svg",
-      "large": "img/logo.svg"
+      "small": "img/logo-bucket.svg",
+      "large": "img/logo-bucket.svg"
     },
     "links": [
       {
@@ -35,7 +35,15 @@
   "routes": [
     {
       "path": "data",
-      "url": "https://dwd.tudelft.nl"
+      "url": "https://dwd.tudelft.nl",
+      "tokenAuth": {
+        "url": "https://dwd.tudelft.nl/oauth2/token",
+        "params": {
+          "grant_type": "authorization_code",
+          "client_id": "{{ .JsonData.clientId }}",
+          "client_secret": "{{ .SecureJsonData.clientSecret }}"
+        }
+      }
     }
   ]
   
